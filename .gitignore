@@ -1,0 +1,36 @@
+# Dependencies and build output
+node_modules/
+.pnpm-store/
+.next/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# Secrets and local environment
+.env
+.env.local
+.env.*.local
+apps/web/.env.local
+apps/web/.env.*.local
+
+# Local app/editor state
+.obsidian/
+.vscode/
+.idea/
+
+# Starter archive copy after promotion to the repository root
+branchlab_starter_pack/
+
+# Raw and generated large data
+data/raw/*
+!data/raw/.gitkeep
+data/cache/
+data/tmp/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

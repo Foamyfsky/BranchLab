@@ -1,0 +1,13 @@
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+**/dist/
+coverage/
+**/coverage/
+.turbo/
+data/raw/
+branchlab_starter_pack/
+docs/references/*.png
+pnpm-lock.yaml
