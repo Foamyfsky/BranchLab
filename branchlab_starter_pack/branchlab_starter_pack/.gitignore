@@ -1,0 +1,31 @@
+# Dependencies and build output
+node_modules/
+.next/
+dist/
+coverage/
+.turbo/
+
+# Secrets
+.env
+.env.local
+.env.*.local
+apps/web/.env.local
+
+# Obsidian local state
+.obsidian/
+
+# Raw and generated large data
+data/raw/**
+!data/raw/.gitkeep
+!data/raw/tfnsw/.gitkeep
+data/cache/
+data/tmp/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
