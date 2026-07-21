@@ -11,13 +11,20 @@ Codex must update this file after every round.
 - [x] Keep the same primary Codex session for core implementation.
 - [x] Place existing TfNSW data locally under `data/raw/tfnsw/`.
 
-## Required before Round 01
+## Completed for Round 01
 
-- [ ] Review the Round 00 file structure and confirm it opens correctly.
-- [ ] Confirm no real API key or real `.env.local` file is present in Git.
-- [ ] Confirm the repository root is opened as the Obsidian vault, not the nested starter pack.
-- [ ] Commit the completed Round 00 bootstrap.
-- [ ] Confirm the working tree is clean before starting Round 01.
+- [x] Confirm Round 00 was committed and the working tree was clean before starting.
+- [x] Add versioned schemas for the deterministic reference-world slice.
+- [x] Add the fictional Metro Pulse reference world.
+- [x] Add deterministic named random streams and fixed-timestep simulation.
+- [x] Add snapshot restore and no-op fork proof tests.
+
+## Required before Round 02
+
+- [ ] Review and commit Round 01.
+- [ ] Confirm `git status --short` is clean.
+- [ ] Confirm the local TfNSW extracted directory should remain the first real-feed smoke source.
+- [ ] Decide whether to add/keep `data/raw/tfnsw/complete_gtfs.zip` for ZIP-source smoke testing.
 
 ## API configuration
 

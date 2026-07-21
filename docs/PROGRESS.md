@@ -2,7 +2,7 @@
 
 ## Current round
 
-Round 00 - complete.
+Round 01 - complete.
 
 ## Completed
 
@@ -26,11 +26,23 @@ Round 00 - complete.
 - Round 00 validation passed: install, format check, lint, typecheck, tests, build, and data
   inventory.
 - Round 00 closeout completed after rerunning the missing production build gate with `CI=1`.
+- Versioned Zod schemas added for world manifests, stations, directed edges, services, vehicles,
+  passenger queues, simulation states, and simulation metrics.
+- Fictional eight-station Metro Pulse reference network added.
+- Deterministic named RNG streams added using world seed, stream name, tick, entity identifier, and
+  draw index.
+- Logical fixed-timestep runner added with seeded Poisson arrivals, aggregate queues, scheduled
+  vehicle movement, finite capacity, boarding, completed passengers, and conservation accounting.
+- Snapshot serialization/restore added.
+- No-op fork proof added at the engine/test level.
+- Round 01 tests cover deterministic replay, seed variation, stream isolation, wall-clock
+  independence, passenger conservation, zero demand, zero capacity, snapshot replay, no-op fork
+  equivalence, and invalid schema references.
 
 ## Current blockers
 
-- No Round 01 blocker is known.
-- Round 00 still needs to be reviewed, committed, and left with a clean working tree before Round 01
+- No Round 02 blocker is known.
+- Round 01 still needs to be reviewed, committed, and left with a clean working tree before Round 02
   begins.
 - Final Sydney subset intentionally remains undecided until the GTFS importer produces candidate
   reports.
@@ -38,4 +50,4 @@ Round 00 - complete.
 
 ## Next gate
 
-Commit Round 00, confirm a clean working tree, then run Round 01 deterministic reference world.
+Commit Round 01, confirm a clean working tree, then run Round 02 generic GTFS importer.
