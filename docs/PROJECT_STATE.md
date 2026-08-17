@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Round 01 - Deterministic reference world is complete and awaiting Robert's review and commit.
+Round 01 - Deterministic reference world is complete and awaiting Skylar's review and commit.
 
 ## Completed structure
 

@@ -46,7 +46,7 @@ Every Codex round must end with:
 - **Important decisions**
 - **Commands run**
 - **Lint/typecheck/test results**
-- **Manual actions required from Robert**
+- **Manual actions required from Skylar**
 - **Data or credentials still required**
 - **Known limitations and risks**
 - **Exact prerequisites for the next round**

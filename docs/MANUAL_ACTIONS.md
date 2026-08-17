@@ -25,6 +25,8 @@ Codex must update this file after every round.
 - [ ] Confirm `git status --short` is clean.
 - [ ] Confirm the local TfNSW extracted directory should remain the first real-feed smoke source.
 - [ ] Decide whether to add/keep `data/raw/tfnsw/complete_gtfs.zip` for ZIP-source smoke testing.
+- [ ] Keep local data archives such as `data.zip` and `data/raw/**` on disk and out of GitHub.
+- [ ] Use Skylar as the project reviewer name in all round-facing instructions and reports.
 
 ## API configuration
 

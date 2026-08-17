@@ -47,6 +47,8 @@ Round 01 - complete.
 - Final Sydney subset intentionally remains undecided until the GTFS importer produces candidate
   reports.
 - Demonstration date remains undecided until calendar coverage is checked.
+- Local data artifacts remain intentionally untracked; they are kept on disk and excluded from GitHub.
+- Human reviewer naming was updated from Robert to Skylar in the round and process documentation.
 
 ## Next gate
 

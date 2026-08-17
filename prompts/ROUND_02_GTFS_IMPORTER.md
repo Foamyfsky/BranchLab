@@ -37,7 +37,7 @@ When the ZIP is present:
 
 - inspect, do not commit it;
 - generate candidate subsets;
-- do not choose the final subset without Robert;
+- do not choose the final subset without Skylar;
 - report exact candidates, station counts, routes, bounds, service frequency, and reasons.
 
 Do not implement passenger simulation or map UI.

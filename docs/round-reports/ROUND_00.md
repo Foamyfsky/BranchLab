@@ -35,7 +35,7 @@ PASS
 - `CI=1 pnpm build` passed.
 - `pnpm data:inventory data/raw/tfnsw` passed.
 
-## Manual actions for Robert
+## Manual actions for Skylar
 
 - Review and commit Round 00.
 - Confirm the working tree is clean before Round 01.

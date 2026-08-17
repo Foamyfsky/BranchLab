@@ -77,7 +77,7 @@ PASS | PARTIAL | BLOCKED
 - tests:
 - smoke test:
 
-## Manual actions for Robert
+## Manual actions for Skylar
 
 ## Data/credentials needed
 

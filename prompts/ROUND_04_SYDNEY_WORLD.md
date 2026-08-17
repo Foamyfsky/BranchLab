@@ -1,6 +1,6 @@
 # Round 04 — Curate Sydney Pulse
 
-Prerequisite: Round 02 candidate report and Robert's explicit subset choice.
+Prerequisite: Round 02 candidate report and Skylar's explicit subset choice.
 
 ## Build
 

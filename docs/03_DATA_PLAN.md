@@ -102,7 +102,7 @@ Do not decide the final stations before inspecting the feed.
 
 1. Importer generates a report of candidate transfer stations and active routes.
 2. Codex outputs 3–5 candidate subsets with station count, routes, transfer structure, and map bounds.
-3. Robert chooses one based on visual clarity and scenario potential.
+3. Skylar chooses one based on visual clarity and scenario potential.
 4. Importer exports the final curated world.
 5. The selected world receives a stable version identifier.
 

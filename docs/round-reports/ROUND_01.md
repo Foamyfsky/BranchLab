@@ -55,7 +55,7 @@ Round 01 created a deterministic, inspectable reference-world vertical slice for
 - Root typecheck: passed.
 - Root test: passed.
 
-## Manual actions required from Robert
+## Manual actions required from Skylar
 
 - Review and commit Round 01.
 - Confirm the working tree is clean before Round 02.

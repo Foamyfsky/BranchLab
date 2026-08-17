@@ -17,3 +17,5 @@
 | 2026-07-22 | Keep Round 01 passenger behavior aggregate and terminal-completion only | Proves determinism, capacity, boarding, and conservation without full route choice             | Accepted |
 | 2026-07-22 | Model Metro Pulse as a fictional eight-station two-service fixture      | Gives a small transfer network without depending on TfNSW or choosing the Sydney subset        | Accepted |
 | 2026-07-22 | Prove no-op fork by snapshot restore and identical continuation         | Exercises the required fork invariant without implementing the full branch system              | Accepted |
+| 2026-08-17 | Keep all local GTFS/data artifacts out of GitHub                       | Prevents large or sensitive local data from being uploaded to the public repo                  | Accepted |
+| 2026-08-17 | Rename the reviewer from Robert to Skylar                              | Aligns the project docs with the current human reviewer identity                              | Accepted |

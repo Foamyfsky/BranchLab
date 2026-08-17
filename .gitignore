@@ -28,6 +28,7 @@ data/raw/*
 !data/raw/.gitkeep
 data/cache/
 data/tmp/
+data.zip
 
 # OS/editor
 .DS_Store

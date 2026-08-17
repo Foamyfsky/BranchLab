@@ -12,7 +12,7 @@ Do not maintain a separate copy of the specification in another vault because th
 
 1. Create a new Git repository from the contents of this starter pack.
 2. Open the repository root as an Obsidian vault.
-3. After Round 00 creates the web app, Robert may manually put the OpenAI key in
+3. After Round 00 creates the web app, Skylar may manually put the OpenAI key in
    `apps/web/.env.local`, never in a Markdown file.
 4. Start one primary Codex session from the repository root. Use that same session for the
    majority of the implementation and eventually run `/feedback` in it.
