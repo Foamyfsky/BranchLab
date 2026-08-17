@@ -60,7 +60,11 @@ importers:
 
   packages/experiment-analysis: {}
 
-  packages/gtfs-importer: {}
+  packages/gtfs-importer:
+    dependencies:
+      '@branchlab/schemas':
+        specifier: workspace:*
+        version: link:../schemas
 
   packages/metro-model: {}
 

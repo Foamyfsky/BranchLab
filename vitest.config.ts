@@ -14,6 +14,9 @@ export default defineConfig({
       "@branchlab/simulation-core": fileURLToPath(
         new URL("./packages/simulation-core/src/index.ts", import.meta.url),
       ),
+      "@branchlab/gtfs-importer": fileURLToPath(
+        new URL("./packages/gtfs-importer/src/index.ts", import.meta.url),
+      ),
     },
   },
   test: {

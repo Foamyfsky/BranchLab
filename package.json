@@ -9,6 +9,8 @@
     "data:inventory": "node scripts/data-inventory.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "gtfs:candidates": "node packages/gtfs-importer/dist/cli.js candidates",
+    "gtfs:import": "node packages/gtfs-importer/dist/cli.js import",
     "lint": "eslint .",
     "test": "vitest run",
     "typecheck": "pnpm -r --parallel typecheck"

@@ -6,6 +6,7 @@ dist/
 coverage/
 .turbo/
 *.tsbuildinfo
+packages/*/.tmp-tests/
 
 # Secrets and local environment
 .env
@@ -34,3 +35,4 @@ Thumbs.db
 
 # Logs
 *.log
+data/
