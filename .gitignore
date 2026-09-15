@@ -1,39 +1,12 @@
-# Dependencies and build output
-node_modules/
-.pnpm-store/
-.next/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
 dist/
-coverage/
-.turbo/
-*.tsbuildinfo
-packages/*/.tmp-tests/
-
-# Secrets and local environment
-.env
-.env.local
-.env.*.local
-apps/web/.env.local
-apps/web/.env.*.local
-
-# Local app/editor state
-.obsidian/
-.vscode/
-.idea/
-
-# Starter archive copy after promotion to the repository root
-branchlab_starter_pack/
-
-# Raw and generated large data
-data/raw/*
-!data/raw/.gitkeep
-data/cache/
-data/tmp/
-data.zip
-
-# OS/editor
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-data/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.uv-cache/

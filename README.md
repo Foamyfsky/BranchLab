@@ -1,25 +1,24 @@
-# BranchLab
+# BranchLab — Observe, Infer, Intervene
 
-BranchLab is an educational scenario-analysis environment for deterministic counterfactual
-experiments on a curated transit network.
+BranchLab is a small research pilot for studying decisions in a network whose full state cannot be observed. The intended work is to define a transparent model, compare state inference with known ground truth, and test interventions under explicit assumptions.
 
-Round 00 provides the repository shell only: workspace packages, tooling, documentation, CI, and a
-minimal Next.js placeholder app. It does not implement GTFS parsing, simulation, branch logic, map
-rendering, OpenAI calls, authentication, or persistence.
+## Research question
 
-## Local checks
+When we observe only part of a network's state, can we infer the hidden state and choose better interventions? When does this fail?
 
-```bash
-pnpm install
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
-```
+## Current capabilities
 
-## Data and secrets
+This repository is a Python package skeleton. It supports an editable local install and importing branchlab. It has no network model, observations, inference method, intervention logic, experiment, or results yet.
 
-- Raw source data belongs under `data/raw/` and is ignored by Git.
-- Real environment files such as `apps/web/.env.local` are ignored by Git.
-- Use `apps/web/.env.local.example` as the placeholder template.
+## Local setup and verification (PowerShell)
+
+Use Python 3.11 or newer. On this computer, the Codex-bundled Python 3.12 executable is at the path below; replace it with your own Python executable if preferred. Run these commands from this directory:
+
+    $Python = 'C:\Users\22246\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+    & $Python -m venv .venv
+    .\.venv\Scripts\python.exe -m pip install -e .
+    .\.venv\Scripts\python.exe -c "import branchlab; print(branchlab.__name__)"
+    .\.venv\Scripts\python.exe -m compileall -q src
+    git status --short
+
+The import command should print branchlab; compileall should exit successfully without output. After setup, select .venv\Scripts\python.exe as the Python interpreter in VS Code. The virtual environment and generated files are ignored by Git.
