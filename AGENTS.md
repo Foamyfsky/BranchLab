@@ -5,3 +5,5 @@ Follow the user's requested scope for each round. Read repository files selectiv
 Keep the Python model, assumptions, and documentation small and understandable. Separate observed state, inferred state, interventions, and ground truth. Record numerical units and data provenance when they are introduced. Make no prediction or safety claims without evidence.
 
 State what is implemented and verified; do not describe research goals as current capabilities. Run checks relevant to changes and keep the working tree reviewable.
+
+Changes to the particle model, intervention protocol, or evaluation must update `docs/particle-world.md` in the same change.
