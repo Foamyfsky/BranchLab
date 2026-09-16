@@ -8,6 +8,11 @@ version = "0.1.0"
 description = "Research pilot for partial observation and intervention in networks"
 readme = "README.md"
 requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "scipy>=1.11",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
