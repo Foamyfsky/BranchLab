@@ -14,7 +14,7 @@ The repository currently implements the deterministic full-state reference for t
 - interactive on/off and location controls with exact simulation timestamps;
 - independent named forks plus validated versioned JSON export/import;
 - room-level and mean outcomes in CSV, a readable console table, and a four-panel figure; and
-- a local Streamlit and Plotly dashboard with a room schematic, histories, event timeline, rate explanation, and completed-branch comparison.
+- a local Streamlit and Plotly dashboard with separate Experiment and Compare views, a vector room schematic, like-for-like histories, an event timeline, a rate explanation, and completed-branch comparisons.
 
 These capabilities form a reproducible synthetic reference, not a safety model or a prediction for a real building. Current implementation status and limitations are tracked in [STATUS.md](STATUS.md).
 
@@ -68,11 +68,13 @@ On macOS or Linux, use `./.venv/bin/python -m streamlit run app.py`.
 
 A short walkthrough:
 
-1. Create or keep the `(2, 2, 2.5)` µg/m³, 5-hour scenario with the cleaner on in C.
-2. Enter `2.5` as the exact target time and advance while paused.
-3. Create a named fork. Finish the parent in C, then select the child, apply A/on at 2.5 h, and finish it.
-4. Compare completed losses, room integrals, final concentrations, and actual clean-air volumes.
-5. Download the versioned JSON, upload it, and press **Import and replay JSON** to validate and restore the same branches.
+1. In **Experiment**, create or keep the `(2, 2, 2.5)` µg/m³, 5-hour scenario with the cleaner on in C.
+2. Enter `2.5` under **Advance to time (h)** and choose **Advance exactly** while paused.
+3. Enter `Move to A` and choose **Create branch and switch**. The child becomes active and reports the original branch as its parent at 2.5 h.
+4. Select A/on, choose **Apply cleaner change**, then **Finish this branch**.
+5. Return to **Original branch (root)**, confirm it is still at 2.5 h with C/on, and finish it.
+6. In **Compare**, select the original as reference and `Move to A` as comparison. Compare one like-for-like concentration history at a time, cumulative outcomes, and clean-air volume.
+7. Download the versioned JSON, upload it, and choose **Validate, replay, and load** to restore the replay-checked experiment.
 
 Changing initial conditions or horizon does not silently mutate an experiment; press **Create new experiment** explicitly. Playback cadence changes only wall-clock refresh timing, not the timestamped physical solution.
 
