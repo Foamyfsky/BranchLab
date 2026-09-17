@@ -1,10 +1,25 @@
 # BranchLab — Observe, Infer, Intervene
 
-BranchLab asks: when only part of a network can be observed, can its hidden state be inferred well enough to choose useful interventions, and when does that approach fail?
+BranchLab asks: when only part of a network can be observed, can its hidden state be inferred well enough to choose useful interventions, and when does that approach fail? The current dashboard is the deterministic full-state reference for that broader research direction: operate one air cleaner in a synthetic three-room world, pause and fork an experiment, compare completed outcomes, and export or replay the exact timestamped intervention history.
 
-The repository currently implements the deterministic full-state reference for that broader research direction. One removable particle class moves through three connected, well-mixed rooms, and one air cleaner can be operated and relocated over a 1-hour or 5-hour horizon. Every state and parameter is known. A fixed experiment exhaustively compares nine predetermined active schedules with a no-cleaner reference, while a local dashboard supports timestamped controls, pause/playback, exact advancement, named forks, comparisons, and deterministic JSON replay. Observation models, hidden-state inference, learned dynamics, feedback control, and real-building calibration are not yet implemented.
+One removable particle class moves through three connected, well-mixed rooms with fixed symmetric exchange and background removal. The cleaner has constant capacity, there is no continuing source, and every room-average concentration and model parameter is known. These are synthetic example parameters—not calibrated measurements or safety guidance.
 
 **Read [the particle-world guide](docs/particle-world.md) for the authoritative model, units, assumptions, intervention protocol, evaluation definitions, results, interpretation, and verification map.**
+
+## Explore the worked comparison
+
+Install the dashboard, launch it from the repository root, and choose **Load worked example**:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[ui]"
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+The button loads a validated, replayed 5-hour experiment and opens **Compare** with **Stay in C** as the reference and **Move to A** as the alternative. Both strategies share the first 2.5 hours and use the same 500 m³ clean-air budget. Moving to A reduces cumulative room-mean concentration $J$ by 5.98%, from 5.3927154554 to 5.0700339391 µg·h/m³, while increasing cumulative concentration in Room C. Stay in C is the demonstration reference, not the best fixed placement.
+
+![BranchLab interactive particle-control dashboard](docs/dashboard.png)
+
+After exploring the example, use **New experiment setup** to choose an initial state and horizon, then operate, advance, fork, and compare your own branches. **Save or load a reproducible experiment** downloads or validates a versioned JSON replay record.
 
 ## Current capabilities
 
@@ -66,19 +81,11 @@ From the repository root on Windows:
 
 On macOS or Linux, use `./.venv/bin/python -m streamlit run app.py`.
 
-A short walkthrough:
-
-1. In **Experiment**, create or keep the `(2, 2, 2.5)` µg/m³, 5-hour scenario with the cleaner on in C.
-2. Enter `2.5` under **Advance to time (h)** and choose **Advance exactly** while paused.
-3. Enter `Move to A` and choose **Create branch and switch**. The child becomes active and reports the original branch as its parent at 2.5 h.
-4. Select A/on, choose **Apply cleaner change**, then **Finish this branch**.
-5. Return to **Original branch (root)**, confirm it is still at 2.5 h with C/on, and finish it.
-6. In **Compare**, select the original as reference and `Move to A` as comparison. Compare one like-for-like concentration history at a time, cumulative outcomes, and clean-air volume.
-7. Download the versioned JSON, upload it, and choose **Validate, replay, and load** to restore the replay-checked experiment.
+For the shortest walkthrough, choose **Load worked example**, inspect the shared history, fork marker, room-level tradeoff, and equal budgets in **Compare**, then open **New experiment setup** to start a separate experiment. The manual controls also support exact advancement, bounded play/pause, named forks, cleaner relocation/on-off changes, run-to-end, and validated JSON export/import.
 
 Changing initial conditions or horizon does not silently mutate an experiment; press **Create new experiment** explicitly. Playback cadence changes only wall-clock refresh timing, not the timestamped physical solution.
 
-![BranchLab interactive particle-control dashboard](docs/dashboard.png)
+For Streamlit Community Cloud, create an app from `Foamyfsky/BranchLab`, branch `main`, with `app.py` as the entrypoint. Choose Python 3.12 in **Advanced settings**. The root `requirements.txt` installs this local project with its `ui` extra, so dependency versions remain declared in `pyproject.toml`.
 
 ## Representative result
 

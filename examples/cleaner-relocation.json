@@ -1,0 +1,155 @@
+{
+  "active_branch_id": "branch-1",
+  "branches": [
+    {
+      "actions": [
+        {
+          "cleaner_on": true,
+          "location": "C",
+          "sequence": 0,
+          "time_h": 0.0
+        }
+      ],
+      "branch_id": "branch-0",
+      "clean_air_volume_m3": 500.0,
+      "concentration_ug_m3": [
+        0.794777202860136,
+        0.5876672120140246,
+        0.217326919442272
+      ],
+      "current_control": {
+        "cleaner_on": true,
+        "location": "C"
+      },
+      "fork_action_count": 1,
+      "fork_time_h": 0.0,
+      "integrated_concentration_ug_h_m3": [
+        6.957353605156933,
+        5.938378731908589,
+        3.282414029070014
+      ],
+      "name": "Stay in C",
+      "parent_id": null,
+      "status": "completed",
+      "time_h": 5.0
+    },
+    {
+      "actions": [
+        {
+          "cleaner_on": true,
+          "location": "C",
+          "sequence": 0,
+          "time_h": 0.0
+        },
+        {
+          "cleaner_on": true,
+          "location": "A",
+          "sequence": 1,
+          "time_h": 2.5
+        }
+      ],
+      "branch_id": "branch-1",
+      "clean_air_volume_m3": 500.0,
+      "concentration_ug_m3": [
+        0.19669777333112198,
+        0.45130320093477405,
+        0.5179895682796554
+      ],
+      "current_control": {
+        "cleaner_on": true,
+        "location": "A"
+      },
+      "fork_action_count": 1,
+      "fork_time_h": 2.5,
+      "integrated_concentration_ug_h_m3": [
+        5.596227474980961,
+        5.721092317364871,
+        3.8927820250913037
+      ],
+      "name": "Move to A",
+      "parent_id": "branch-0",
+      "status": "completed",
+      "time_h": 5.0
+    }
+  ],
+  "horizon": {
+    "unit": "hour",
+    "value": 5.0
+  },
+  "initial_conditions": {
+    "concentration": [
+      2.0,
+      2.0,
+      2.5
+    ],
+    "unit": "micrograms/m^3"
+  },
+  "model": {
+    "id": "branchlab.three-room-particle",
+    "version": "1.0.0"
+  },
+  "objective": {
+    "definition": "J = (I_A + I_B + I_C) / 3",
+    "direction": "lower_is_better",
+    "id": "integrated_mean_concentration",
+    "unit": "micrograms*hour/m^3"
+  },
+  "observation_mode": {
+    "description": "All three room-average concentrations are known.",
+    "id": "full_state"
+  },
+  "parameters": {
+    "background_removal": {
+      "unit": "1/hour",
+      "values": [
+        0.1,
+        0.1,
+        0.1
+      ]
+    },
+    "cleaner_capacity": {
+      "unit": "m^3/hour",
+      "value": 100.0
+    },
+    "exchange": {
+      "unit": "m^3/hour",
+      "values": [
+        [
+          0.0,
+          50.0,
+          0.0
+        ],
+        [
+          50.0,
+          0.0,
+          50.0
+        ],
+        [
+          0.0,
+          50.0,
+          0.0
+        ]
+      ]
+    },
+    "relocation_time": {
+      "unit": "hour",
+      "value": 0.0
+    },
+    "rooms": [
+      "A",
+      "B",
+      "C"
+    ],
+    "source_after_initial_state": false,
+    "topology": "A-B-C",
+    "volumes": {
+      "unit": "m^3",
+      "values": [
+        100.0,
+        100.0,
+        100.0
+      ]
+    }
+  },
+  "schema_version": 1
+}

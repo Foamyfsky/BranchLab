@@ -82,6 +82,34 @@ class DashboardInteractionTests(unittest.TestCase):
         self.assertGreater(float(moved["integrals"][2]), float(fixed["integrals"][2]))
         self.assertEqual(list(app.exception), [])
 
+    def test_worked_example_loads_replays_and_selects_comparison(self):
+        app = self.app
+        app.button(key="load_worked_example_button").click().run(timeout=20)
+
+        experiment = app.session_state["experiment"]
+        self.assertFalse(experiment.playing)
+        self.assertEqual(app.segmented_control(key="workspace_view").value, "Compare")
+        self.assertEqual(app.selectbox(key="compare_reference").value, "branch-0")
+        self.assertEqual(app.selectbox(key="compare_candidate").value, "branch-1")
+
+        stay = experiment.branches["branch-0"]
+        move = experiment.branches["branch-1"]
+        self.assertEqual(stay.name, "Stay in C")
+        self.assertEqual(move.name, "Move to A")
+        self.assertEqual(move.parent_id, stay.branch_id)
+        self.assertEqual(move.fork_time_h, 2.5)
+
+        stay_summary = experiment.branch_summary(stay.branch_id)
+        move_summary = experiment.branch_summary(move.branch_id)
+        self.assertAlmostEqual(float(stay_summary["J"]), 5.3927154554, places=9)
+        self.assertAlmostEqual(float(move_summary["J"]), 5.0700339391, places=9)
+        self.assertEqual(float(stay_summary["clean_air_volume_m3"]), 500.0)
+        self.assertEqual(float(move_summary["clean_air_volume_m3"]), 500.0)
+        self.assertGreater(
+            float(move_summary["integrals"][2]), float(stay_summary["integrals"][2])
+        )
+        self.assertEqual(list(app.exception), [])
+
 
 if __name__ == "__main__":
     unittest.main()

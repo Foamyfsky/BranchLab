@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import math
+from pathlib import Path
 import time
 
 import numpy as np
@@ -18,6 +19,8 @@ ROOM_COLORS = {"A": "#31d8e6", "B": "#ffb84a", "C": "#ef6f61"}
 BRANCH_COLORS = ("#31d8e6", "#ffb84a", "#b58bd8", "#86c77a", "#ef6f61")
 PLAYBACK_STEP_H = 0.05
 PLAYBACK_DELAYS = {"Slow": 0.75, "Normal": 0.32, "Fast": 0.10}
+PROJECT_ROOT = Path(__file__).resolve().parent
+WORKED_EXAMPLE_PATH = PROJECT_ROOT / "examples" / "cleaner-relocation.json"
 
 
 st.set_page_config(
@@ -84,9 +87,20 @@ st.markdown(
 
 def current_experiment() -> ExperimentSession:
     if "experiment" not in st.session_state:
-        st.session_state.experiment = ExperimentSession(
-            INITIAL_STATES[0], 5.0, cleaner_location="C", cleaner_on=True
-        )
+        if st.query_params.get("example") == "cleaner-relocation":
+            restored, stay_id, move_id = load_worked_example()
+            st.session_state.experiment = restored
+            st.session_state.flash_message = (
+                "Loaded and replay-verified the worked example. Playback is paused."
+            )
+            st.session_state.pending_full_sync = True
+            st.session_state.pending_workspace_view = "Compare"
+            st.session_state.pending_compare_reference = stay_id
+            st.session_state.pending_compare_candidate = move_id
+        else:
+            st.session_state.experiment = ExperimentSession(
+                INITIAL_STATES[0], 5.0, cleaner_location="C", cleaner_on=True
+            )
     return st.session_state.experiment
 
 
@@ -94,11 +108,17 @@ def root_branch(experiment: ExperimentSession):
     return next(branch for branch in experiment.branches.values() if branch.parent_id is None)
 
 
+def branch_display_name(experiment: ExperimentSession, branch_id: str) -> str:
+    branch = experiment.branches[branch_id]
+    if branch.parent_id is None and branch.name == "main":
+        return "Original branch"
+    return branch.name
+
+
 def branch_label(experiment: ExperimentSession, branch_id: str) -> str:
     branch = experiment.branches[branch_id]
-    name = "Original branch" if branch.parent_id is None else branch.name
     status = "complete" if branch.is_complete(experiment.horizon_h) else "partial"
-    return f"{name} · t={branch.time_h:g} h · {status}"
+    return f"{branch_display_name(experiment, branch_id)} · t={branch.time_h:g} h · {status}"
 
 
 def branch_selector_label(experiment: ExperimentSession, branch_id: str) -> str:
@@ -106,9 +126,9 @@ def branch_selector_label(experiment: ExperimentSession, branch_id: str) -> str:
 
     branch = experiment.branches[branch_id]
     if branch.parent_id is None:
-        return "Original branch (root)"
+        return f"{branch_display_name(experiment, branch_id)} (root)"
     parent = experiment.branches[branch.parent_id]
-    parent_name = "Original branch" if parent.parent_id is None else parent.name
+    parent_name = branch_display_name(experiment, parent.branch_id)
     return f"{branch.name} (from {parent_name} at {branch.fork_time_h:g} h)"
 
 
@@ -127,16 +147,71 @@ def setup_preset(experiment: ExperimentSession) -> str:
     return "Custom"
 
 
-def reset_experiment(experiment: ExperimentSession, message: str) -> None:
+def worked_example_branch_ids(experiment: ExperimentSession) -> tuple[str, str]:
+    by_name = {branch.name: branch_id for branch_id, branch in experiment.branches.items()}
+    try:
+        stay_id = by_name["Stay in C"]
+        move_id = by_name["Move to A"]
+    except KeyError as error:
+        raise ValueError("worked example branches are missing") from error
+    stay = experiment.branches[stay_id]
+    move = experiment.branches[move_id]
+    if (
+        stay.parent_id is not None
+        or move.parent_id != stay_id
+        or not math.isclose(move.fork_time_h, 2.5, abs_tol=1e-12)
+        or not stay.is_complete(experiment.horizon_h)
+        or not move.is_complete(experiment.horizon_h)
+    ):
+        raise ValueError("worked example lineage or completion state is invalid")
+    return stay_id, move_id
+
+
+def load_worked_example() -> tuple[ExperimentSession, str, str]:
+    """Load the repository example through the validated replay implementation."""
+
+    restored = ExperimentSession.from_json(WORKED_EXAMPLE_PATH.read_bytes())
+    restored.pause()
+    stay_id, move_id = worked_example_branch_ids(restored)
+    return restored, stay_id, move_id
+
+
+def reset_experiment(
+    experiment: ExperimentSession,
+    message: str,
+    *,
+    workspace_view: str = "Experiment",
+    comparison: tuple[str, str] | None = None,
+) -> None:
     st.session_state.experiment = experiment
     st.session_state.flash_message = message
     st.session_state.pending_full_sync = True
+    st.session_state.pending_workspace_view = workspace_view
+    if comparison is not None:
+        st.session_state.pending_compare_reference = comparison[0]
+        st.session_state.pending_compare_candidate = comparison[1]
     st.rerun()
 
 
 def prepare_ui_state(experiment: ExperimentSession) -> None:
     pending_branch = st.session_state.pop("pending_active_branch", None)
+    pending_workspace = st.session_state.pop("pending_workspace_view", None)
+    pending_compare_reference = st.session_state.pop("pending_compare_reference", None)
+    pending_compare_candidate = st.session_state.pop("pending_compare_candidate", None)
     full_sync = bool(st.session_state.pop("pending_full_sync", False))
+    if pending_workspace in ("Experiment", "Compare"):
+        st.session_state.workspace_view = pending_workspace
+    elif "workspace_view" not in st.session_state:
+        st.session_state.workspace_view = "Experiment"
+    if full_sync:
+        for key in ("compare_reference", "compare_candidate", "compare_quantity"):
+            st.session_state.pop(key, None)
+    if pending_compare_reference in experiment.branches:
+        st.session_state.compare_reference = pending_compare_reference
+    if pending_compare_candidate in experiment.branches:
+        st.session_state.compare_candidate = pending_compare_candidate
+    if pending_compare_reference is not None or pending_compare_candidate is not None:
+        st.session_state.compare_quantity = "Room mean"
     if pending_branch is not None:
         st.session_state.active_branch_selector = pending_branch
     if full_sync or st.session_state.get("active_branch_selector") not in experiment.branches:
@@ -254,8 +329,14 @@ def schematic_html(experiment: ExperimentSession) -> str:
             <path d=\"M 0 0 L 10 5 L 0 10 z\" fill=\"#ffb84a\"/>
           </marker>
         </defs>
-        <path d=\"M250 113 H295 M520 113 H565\" stroke=\"#b66c35\" stroke-width=\"4\"
-              marker-start=\"url(#arrow)\" marker-end=\"url(#arrow)\"/>
+        <path d=\"M250 106 H295\" stroke=\"#b66c35\" stroke-width=\"3\"
+              marker-end=\"url(#arrow)\"/>
+        <path d=\"M295 120 H250\" stroke=\"#b66c35\" stroke-width=\"3\"
+              marker-end=\"url(#arrow)\"/>
+        <path d=\"M520 106 H565\" stroke=\"#b66c35\" stroke-width=\"3\"
+              marker-end=\"url(#arrow)\"/>
+        <path d=\"M565 120 H520\" stroke=\"#b66c35\" stroke-width=\"3\"
+              marker-end=\"url(#arrow)\"/>
         <text x=\"272\" y=\"91\" text-anchor=\"middle\" fill=\"#9fa8a6\" font-size=\"10\" font-family=\"monospace\">50 m³/h</text>
         <text x=\"542\" y=\"91\" text-anchor=\"middle\" fill=\"#9fa8a6\" font-size=\"10\" font-family=\"monospace\">50 m³/h</text>
         {''.join(rooms)}
@@ -559,7 +640,7 @@ def render_experiment_view(experiment: ExperimentSession) -> None:
                 st.error(str(error))
         if branch.parent_id is not None:
             parent = experiment.branches[branch.parent_id]
-            parent_name = "Original branch" if parent.parent_id is None else parent.name
+            parent_name = branch_display_name(experiment, parent.branch_id)
             st.caption(
                 f"Current lineage: {parent_name} → {branch.name} "
                 f"at {branch.fork_time_h:g} h."
@@ -606,19 +687,45 @@ def render_compare_view(experiment: ExperimentSession) -> None:
             "Complete at least two branches to compare them. In Experiment: advance, fork, apply a different control, and finish both branches."
         )
         return
+    if st.session_state.get("compare_reference") not in completed:
+        st.session_state.compare_reference = completed[0]
+    if st.session_state.get("compare_candidate") not in completed:
+        st.session_state.compare_candidate = completed[1]
     c1, c2, c3 = st.columns([1, 1, .8])
     reference_id = c1.selectbox(
         "Reference branch", completed,
         format_func=lambda item: branch_label(experiment, item), key="compare_reference",
     )
-    default_comparison = 1 if len(completed) > 1 else 0
     comparison_id = c2.selectbox(
-        "Comparison branch", completed, index=default_comparison,
+        "Comparison branch", completed,
         format_func=lambda item: branch_label(experiment, item), key="compare_candidate",
     )
     quantity = c3.selectbox("History quantity", ["Room mean", "Room A", "Room B", "Room C"], key="compare_quantity")
     if reference_id == comparison_id:
         st.warning("Select two different completed branches for a meaningful comparison.")
+
+    try:
+        worked_reference, worked_alternative = worked_example_branch_ids(experiment)
+    except ValueError:
+        worked_reference = worked_alternative = ""
+    if (reference_id, comparison_id) == (worked_reference, worked_alternative):
+        reference_summary = experiment.branch_summary(reference_id)
+        alternative_summary = experiment.branch_summary(comparison_id)
+        reduction = experiment.percentage_improvement(
+            float(alternative_summary["J"]), float(reference_summary["J"])
+        )
+        st.markdown(
+            "**Worked example.** Both strategies share the first 2.5 hours and use the same "
+            "clean-air budget. Moving to A lowers overall cumulative mean concentration, while "
+            "increasing cumulative concentration in Room C."
+        )
+        st.caption(
+            f"Stay in C: J = {float(reference_summary['J']):.10f}; "
+            f"Move to A: J = {float(alternative_summary['J']):.10f}; "
+            f"both budgets = {float(reference_summary['clean_air_volume_m3']):g} m³; "
+            f"J reduction relative to Stay in C = {format_percent(reduction)}. "
+            "Stay in C is the demonstration reference, not the best fixed placement."
+        )
 
     st.plotly_chart(
         comparison_history_figure(experiment, reference_id, comparison_id, quantity),
@@ -754,6 +861,33 @@ def render_setup_and_replay(experiment: ExperimentSession) -> None:
         )
 
 
+def render_worked_example_loader() -> None:
+    text_col, action_col = st.columns([3.2, 1.0], vertical_alignment="center")
+    with text_col:
+        st.markdown("### Worked comparison · cleaner relocation")
+        st.caption(
+            "Load two completed 5-hour branches: Stay in C versus Move to A after a shared "
+            "2.5-hour history. Loading this example replaces the current experiment."
+        )
+    with action_col:
+        if st.button(
+            "Load worked example",
+            type="primary",
+            width="stretch",
+            key="load_worked_example_button",
+        ):
+            try:
+                restored, stay_id, move_id = load_worked_example()
+                reset_experiment(
+                    restored,
+                    "Loaded and replay-verified the worked example. Playback is paused.",
+                    workspace_view="Compare",
+                    comparison=(stay_id, move_id),
+                )
+            except (OSError, ValueError) as error:
+                st.error(f"Worked example could not be loaded: {error}")
+
+
 experiment = current_experiment()
 prepare_ui_state(experiment)
 
@@ -780,16 +914,22 @@ flash = st.session_state.pop("flash_message", None)
 if flash:
     st.success(flash)
 
+render_worked_example_loader()
+render_setup_and_replay(experiment)
+
 view = st.segmented_control(
-    "Workspace view", ["Experiment", "Compare"], default="Experiment",
+    "Workspace view", ["Experiment", "Compare"],
     selection_mode="single", key="workspace_view",
 )
+previous_view = st.session_state.get("_rendered_workspace_view")
+if view == "Experiment" and previous_view != "Experiment":
+    st.session_state.active_branch_selector = experiment.active_branch_id
+    sync_branch_controls(experiment, force=True)
+st.session_state._rendered_workspace_view = view
 if view == "Compare":
     render_compare_view(experiment)
 else:
     render_experiment_view(experiment)
-
-render_setup_and_replay(experiment)
 
 if experiment.playing:
     time.sleep(PLAYBACK_DELAYS[st.session_state.get("playback_speed", "Normal")])

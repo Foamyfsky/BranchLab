@@ -98,6 +98,8 @@ The **Experiment** view keeps the active branch, simulation time, applied contro
 
 The **Compare** view operates only on completed branches from the same fixed experiment and horizon. Its history chart compares one like-for-like quantity—A, B, C, or the room mean—between an explicitly selected reference and comparison branch. Cumulative concentration and equivalent clean-air volume use separate charts because they have different units. The comparison table reports signed absolute and percentage differences as comparison minus reference; a zero reference denominator is shown as `N/A`, and unequal budgets are identified.
 
+The repository includes a completed demonstration in `examples/cleaner-relocation.json`. **Load worked example** replaces the current in-memory experiment through the same validated JSON replay used for uploaded files, pauses playback, and opens **Compare** with **Stay in C** as the reference and its child **Move to A** as the alternative. Both branches start with $(2,2,2.5)$ µg/m³, clean C for 2.5 hours, fork, and finish at 5 hours; the child then cleans A. Each consumes 500 m³ of clean air. Moving to A reduces $J$ from 5.3927154554 to 5.0700339391 µg·h/m³ (5.98% relative to Stay in C) while increasing $I_C$ from 3.2824140291 to 3.8927820251 µg·h/m³. Stay in C is a deliberately chosen comparison reference, not the best fixed placement.
+
 ### Fork semantics
 
 A named fork is created only from the current paused state. It copies the exact simulation time, concentration vector, accumulated room integrals, consumed clean-air volume, current control, and prior action history. The child records its parent and fork time, and the dashboard immediately selects it so subsequent edits apply to the new branch. Parent, child, and sibling arrays and subsequent actions are independent after the fork.
@@ -205,7 +207,7 @@ The interactive-session tests additionally check:
 - the C→C and C→A walkthrough losses and 500 m³ budgets; and
 - JSON export/import replay equivalence plus rejection of corrupted accumulated state.
 
-Focused dashboard tests drive the real Streamlit widgets through exact advancement, branch creation and selection, pending-versus-applied controls, parent/child switching, completion, and the expected walkthrough outcomes. They guard the UI wiring in addition to the lower-level session behavior.
+Focused dashboard tests drive the real Streamlit widgets through exact advancement, branch creation and selection, pending-versus-applied controls, parent/child switching, completion, worked-example replay and comparison selection, and the expected walkthrough outcomes. They guard the UI wiring in addition to the lower-level session behavior.
 
 | Path | Responsibility |
 | --- | --- |
@@ -213,9 +215,11 @@ Focused dashboard tests drive the real Streamlit widgets through exact advanceme
 | `src/branchlab/experiment.py` | synthetic parameters, schedule enumeration, evaluation, console reporting, CSV writing, and plotting |
 | `src/branchlab/session.py` | timestamped controls, exact advancement, pause/playback state, forks, metrics, rate contributions, and validated JSON replay |
 | `app.py` | Streamlit controls, schematic, Plotly charts, branch timeline, comparison, and explicit import/export UI |
+| `examples/cleaner-relocation.json` | validated, versioned two-branch demonstration used by the one-click worked example |
+| `requirements.txt` | minimal Streamlit Community Cloud installation of the local project with its `ui` extra |
 | `tests/test_transport.py` | physical invariants, numerical checks, branch independence, symmetry, and reference losses |
 | `tests/test_session.py` | interactive advancement, branching, timing, budget, replay, and walkthrough outcomes |
-| `tests/test_app.py` | Streamlit branch-selection, pending-control, parent-independence, and end-to-end outcome regressions |
+| `tests/test_app.py` | Streamlit branch-selection, pending-control, parent-independence, worked-example, and end-to-end outcome regressions |
 | `results/transport.csv` | all 40 deterministic branch records with room-level and mean outcomes |
 | `results/transport.png` | four-panel presentation of histories and tested schedules for the `(2, 2, 2.5)` initial state |
 | `docs/dashboard.png` | current laptop-browser view of the interactive dashboard |
