@@ -124,7 +124,7 @@ For a metric $X$, either one room's $I_i$ or the mean loss $J$, improvement rela
 $$
 \Delta X=X_{\mathrm{none}}-X_{\mathrm{schedule}},
 \qquad
-\Delta X_{\%}=100\frac{X_{\mathrm{none}}-X_{\mathrm{schedule}}}
+\Delta X_{\mathrm{pct}}=100\frac{X_{\mathrm{none}}-X_{\mathrm{schedule}}}
 {X_{\mathrm{none}}}.
 $$
 
