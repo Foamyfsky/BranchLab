@@ -1,5 +1,7 @@
 # BranchLab — Observe, Infer, Intervene
 
+**Live dashboard: [branchlab-dashboard.streamlit.app](https://branchlab-dashboard.streamlit.app/)**
+
 BranchLab asks: when only part of a network can be observed, can its hidden state be inferred well enough to choose useful interventions, and when does that approach fail? The current dashboard is the deterministic full-state reference for that broader research direction: operate one air cleaner in a synthetic three-room world, pause and fork an experiment, compare completed outcomes, and export or replay the exact timestamped intervention history.
 
 One removable particle class moves through three connected, well-mixed rooms with fixed symmetric exchange and background removal. The cleaner has constant capacity, there is no continuing source, and every room-average concentration and model parameter is known. These are synthetic example parameters—not calibrated measurements or safety guidance.
